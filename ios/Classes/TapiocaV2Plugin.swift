@@ -3,14 +3,15 @@ import UIKit
 
 public class TapiocaV2Plugin: NSObject, FlutterPlugin {
     private var events: FlutterEventSink?
-
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let channel = FlutterMethodChannel(name: "video_editor", binaryMessenger: registrar.messenger())
+    
+    public static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "video_editor", binaryMessenger: registrar.messenger())
         let eventChannel = FlutterEventChannel(name: "video_editor_progress", binaryMessenger: registrar.messenger())
-
+        
         let instance = TapiocaV2Plugin()
-        eventChannel.setStreamHandler(instance)
-    registrar.addMethodCallDelegate(instance, channel: channel)
+        registrar.addMethodCallDelegate(instance, channel: channel)
+       eventChannel.setStreamHandler(instance)
+
   }
 
 public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -25,29 +26,29 @@ public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         }
         guard let srcName = args["srcFilePath"] as? String else {
                 result(FlutterError(code: "src_file_path_not_found",
-                                  message: "the src file path sr is not found.",
-                                  details: nil))
+                                    message: "the src file path sr is not found.",
+                                    details: nil))
                 return
-        }
-        guard let destName = args["destFilePath"] as? String else {
+            }
+            guard let destName = args["destFilePath"] as? String else {
                 result(FlutterError(code: "dest_file_path_not_found",
-                                  message: "the dest file path is not found.",
-                                  details: nil))
+                                    message: "the dest file path is not found.",
+                                    details: nil))
                 return
-        }
-        guard let processing = args["processing"] as?  [String: [String: Any]] else {
+            }
+            guard let processing = args["processing"] as?  [String: [String: Any]] else {
                 result(FlutterError(code: "processing_data_not_found",
-                                  message: "the processing is not found.",
-                                  details: nil))
+                                    message: "the processing is not found.",
+                                    details: nil))
                 return
+            }
+            video.writeVideofile(srcPath: srcName, destPath: destName,
+                                 processing: processing,result: result, eventSink : self.events)
+        default:
+            result("iOS d" + UIDevice.current.systemVersion)
         }
-        video.writeVideofile(srcPath: srcName, destPath: destName,
-        processing: processing,result: result, eventSink : self.events)
-    default:
-        result("iOS d" + UIDevice.current.systemVersion)
     }
-
-    }
+}
 
 extension TapiocaV2Plugin : FlutterStreamHandler {
 
