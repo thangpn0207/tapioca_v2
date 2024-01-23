@@ -8,7 +8,7 @@ public class TapiocaV2Plugin: NSObject, FlutterPlugin {
     let channel = FlutterMethodChannel(name: "video_editor", binaryMessenger: registrar.messenger())
         let eventChannel = FlutterEventChannel(name: "video_editor_progress", binaryMessenger: registrar.messenger())
 
-    let instance = TapiocaV2Plugin()
+        let instance = TapiocaV2Plugin()
         eventChannel.setStreamHandler(instance)
     registrar.addMethodCallDelegate(instance, channel: channel)
   }
@@ -42,26 +42,23 @@ public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
                 return
         }
         video.writeVideofile(srcPath: srcName, destPath: destName,
-        processing: processing,result: result,result: result, eventSink : self.events)
+        processing: processing,result: result, eventSink : self.events)
     default:
         result("iOS d" + UIDevice.current.systemVersion)
     }
 
     }
-  extension SwiftVideoEditorPlugin : FlutterStreamHandler {
-      public func onListen(withArguments arguments: Any?,
 
-                           eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+extension TapiocaV2Plugin : FlutterStreamHandler {
 
-          self.events = events
-          return nil
+    public func onListen(withArguments arguments: Any?,
+                         eventSink events: @escaping FlutterEventSink) -> FlutterError? {
+        self.events = events
+        return nil
+    }
 
-      }
-      public func onCancel(withArguments arguments: Any?) -> FlutterError? {
-
-          self.events = nil
-
-          return nil
-      }
-  }
-
+    public func onCancel(withArguments arguments: Any?) -> FlutterError? {
+        self.events = nil
+        return nil
+    }
+}
