@@ -70,8 +70,8 @@ class _TextOverlay extends TapiocaBall {
   final int y;
   final int size;
   final Color color;
-  final int start;
-  final int duration;
+  final int? start;
+  final int? duration;
   _TextOverlay(this.text, this.x, this.y, this.size, this.color, this.start,
       this.duration);
 

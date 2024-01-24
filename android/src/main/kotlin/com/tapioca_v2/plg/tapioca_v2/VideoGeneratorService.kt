@@ -31,12 +31,7 @@ class VideoGeneratorService(
                     }
                     "TextOverlay" -> {
                         val textOverlay = TextOverlay(v)
-                        if (textOverlay.duration==null){
-                            filters.add(GlTextOverlayFilter(textOverlay))
-                        }else{
-                            filtersWait.add(textOverlay)
-
-                        }
+                        filters.add(GlTextOverlayFilter(textOverlay))
                     }
                     "ImageOverlay" -> {
                         val imageOverlay = ImageOverlay(v)
@@ -61,15 +56,7 @@ class VideoGeneratorService(
                 }
 
                 override fun onCurrentWrittenVideoTime(currentTimeMs: Long) {
-                    if (filtersWait.isNotEmpty()){
-                        for (it in filtersWait) {
-                            if (currentTimeMs >= it.start!! && currentTimeMs <=
-                                it.start!! + it.duration!!) {
-                                // Apply the filter during the specified time range
-                                composer.filter(GlTextOverlayFilter(it))
-                            }
-                        }
-                    }
+                    println("onProgress = $Long")
                 }
 
                 override fun onCompleted() {
