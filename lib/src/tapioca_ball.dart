@@ -57,7 +57,7 @@ class _Filter extends TapiocaBall {
     this.degree = degree;
   }
   _Filter.color(Color colorInstance, double degree) {
-    this.color = '#${colorInstance.value.toRadixString(16).substring(2)}';
+    this.color = '#${colorInstance.value.toRadixString(16)}';
     this.degree = degree;
   }
 
@@ -95,7 +95,7 @@ class _TextOverlay extends TapiocaBall {
       'size': size,
       'start': start,
       'duration': duration,
-      'color': '#${color.value.toRadixString(16).substring(2)}'
+      'color': '#${color.value.toRadixString(16)}'
     };
   }
 
