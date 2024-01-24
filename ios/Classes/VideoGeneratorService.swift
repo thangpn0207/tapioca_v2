@@ -81,8 +81,6 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                           let x = value["x"] as? NSNumber,
                           let y = value["y"] as? NSNumber,
                           let textSize = value["size"] as? NSNumber,
-                          let start = value["start"] as? Double?,
-                          let duration = value["duration"] as? Double?,
                           let color = value["color"] as? String else {
                         print("not found text overlay")
                         result(FlutterError(code: "processing_data_invalid",
@@ -104,10 +102,10 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                     let transform = CGAffineTransform(translationX: CGFloat(truncating: x), y: filteringRequest.sourceImage.extent.height - CGFloat(textSize) - CGFloat(truncating: y))
 
                      // Calculate the time-based display range
-                     let currentTimeInSeconds = CMTimeGetSeconds(filteringRequest.compositionTime)
-                     let currentTimeInMilliseconds = currentTimeInSeconds * 1000
-                        let displayStartTime = start
-                        let displayEndTime = start + duration
+//                     let currentTimeInSeconds = CMTimeGetSeconds(filteringRequest.compositionTime)
+//                     let currentTimeInMilliseconds = currentTimeInSeconds * 1000
+//                        let displayStartTime = start
+//                        let displayEndTime = start + duration
 
                         // Check if the current time falls within the display range
 //                        if currentTimeInMilliseconds >= displayStartTime && currentTimeInMilliseconds <= displayEndTime {
