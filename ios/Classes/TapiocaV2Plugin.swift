@@ -10,7 +10,7 @@ public class TapiocaV2Plugin: NSObject, FlutterPlugin {
         
         let instance = TapiocaV2Plugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-       eventChannel.setStreamHandler(instance)
+         eventChannel.setStreamHandler(instance)
 
   }
 

@@ -81,6 +81,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                           let x = value["x"] as? NSNumber,
                           let y = value["y"] as? NSNumber,
                           let textSize = value["size"] as? NSNumber,
+                          let start = value["start"] as? Double,
+                          let duration = value["duration"] as? Double,
                           let color = value["color"] as? String else {
                         print("not found text overlay")
                         result(FlutterError(code: "processing_data_invalid",
@@ -98,8 +100,23 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                     let attributedQuote = NSAttributedString(string: text, attributes: attributes)
                     let textGenerationFilter = CIFilter(name: "CIAttributedTextImageGenerator")!
                     textGenerationFilter.setValue(attributedQuote, forKey: "inputText")
-                    source = textGenerationFilter.outputImage!.transformed(by: CGAffineTransform(translationX: CGFloat(truncating: x), y: filteringRequest.sourceImage.extent.height -  CGFloat(textSize) - CGFloat(truncating: y)))
-                        .applyingFilter("CISourceAtopCompositing", parameters: [ kCIInputBackgroundImageKey: source])
+                    let textImage = textGenerationFilter.outputImage!
+                    let transform = CGAffineTransform(translationX: CGFloat(truncating: x), y: filteringRequest.sourceImage.extent.height - CGFloat(textSize) - CGFloat(truncating: y))
+
+ // Calculate the time-based display range
+    let currentTime = CMTimeMakeWithMilliseconds(filteringRequest
+    .compositionTime, preferredTimescale: 1000)
+    let displayStartTime = start
+    let displayEndTime = start + duration
+
+    // Check if the current time falls within the display range
+    if currentTime >= displayStartTime && currentTime <= displayEndTime {
+        source = textImage
+            .transformed(by: transform)
+            .applyingFilter("CISourceAtopCompositing", parameters: [kCIInputBackgroundImageKey: source])
+    }
+//                    source = textGenerationFilter.outputImage!.transformed(by: CGAffineTransform(translationX: CGFloat(truncating: x), y: filteringRequest.sourceImage.extent.height -  CGFloat(textSize) - CGFloat(truncating: y)))
+//                        .applyingFilter("CISourceAtopCompositing", parameters: [ kCIInputBackgroundImageKey: source])
                 case "ImageOverlay":
                     guard let bitmap = value["bitmap"] as? FlutterStandardTypedData,
                           let x = value["x"] as? NSNumber,
@@ -194,4 +211,6 @@ struct TextOverlay {
     let y: NSNumber
     let size: NSNumber
     let color: String
+    let start: NSNumber
+    let duration: NSNumber
 }
