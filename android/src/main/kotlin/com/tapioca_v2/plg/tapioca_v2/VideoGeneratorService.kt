@@ -32,9 +32,9 @@ class VideoGeneratorService(
                     "TextOverlay" -> {
                         val textOverlay = TextOverlay(v)
                         if (textOverlay.duration==null){
-                            filtersWait.add(textOverlay)
-                        }else{
                             filters.add(GlTextOverlayFilter(textOverlay))
+                        }else{
+                            filtersWait.add(textOverlay)
 
                         }
                     }
@@ -51,7 +51,7 @@ class VideoGeneratorService(
             })
         }
         composer.filter(GlFilterGroup( filters))
-            .videoFormatMimeType(VideoFormatMimeType.HEVC)
+            .videoFormatMimeType(VideoFormatMimeType.MPEG4)
             .listener(object : Mp4Composer.Listener {
                 override fun onProgress(progress: Double) {
                     println("onProgress = $progress")
