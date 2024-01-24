@@ -1,5 +1,15 @@
 package com.tapioca_v2.plg.tapioca_v2
 
+import android.app.Activity
+import com.daasuu.mp4compose.composer.Mp4Composer
+import com.daasuu.mp4compose.filter.*
+import com.tapioca_v2.plg.tapioca_v2.filter.GlImageOverlayFilter
+import io.flutter.plugin.common.MethodChannel.Result
+import com.daasuu.mp4compose.VideoFormatMimeType
+import io.flutter.plugin.common.EventChannel
+import com.tapioca_v2.plg.tapioca_v2.filter.GlColorBlendFilter
+import com.tapioca_v2.plg.tapioca_v2.filter.GlTextOverlayFilter
+
 interface VideoGeneratorServiceInterface {
     fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink);
 }
@@ -9,6 +19,8 @@ class VideoGeneratorService(
 ) : VideoGeneratorServiceInterface {
     override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink ) {
         val filters: MutableList<GlFilter> = mutableListOf()
+        val filtersWait: MutableList<TextOverlay> = mutableListOf()
+
         try {
             processing.forEach { (k, v) ->
                 when (k) {
@@ -19,7 +31,12 @@ class VideoGeneratorService(
                     }
                     "TextOverlay" -> {
                         val textOverlay = TextOverlay(v)
-                        filters.add(GlTextOverlayFilter(textOverlay))
+                        if (textOverlay.duration==null){
+                            filtersWait.add(textOverlay)
+                        }else{
+                            filters.add(GlTextOverlayFilter(textOverlay))
+
+                        }
                     }
                     "ImageOverlay" -> {
                         val imageOverlay = ImageOverlay(v)
@@ -37,10 +54,22 @@ class VideoGeneratorService(
             .videoFormatMimeType(VideoFormatMimeType.HEVC)
             .listener(object : Mp4Composer.Listener {
                 override fun onProgress(progress: Double) {
-                    println("onProgress = " + progress)
+                    println("onProgress = $progress")
                     activity.runOnUiThread(Runnable {
                         eventSink.success(progress)
                     })
+                }
+
+                override fun onCurrentWrittenVideoTime(currentTimeMs: Long) {
+                    if (filtersWait.isNotEmpty()){
+                        for (it in filtersWait) {
+                            if (currentTimeMs >= it.start!! && currentTimeMs <=
+                                it.start!! + it.duration!!) {
+                                // Apply the filter during the specified time range
+                                composer.filter(GlTextOverlayFilter(it))
+                            }
+                        }
+                    }
                 }
 
                 override fun onCompleted() {

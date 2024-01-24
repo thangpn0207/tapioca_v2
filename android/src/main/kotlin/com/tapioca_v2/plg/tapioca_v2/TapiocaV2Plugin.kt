@@ -1,26 +1,19 @@
+@file:Suppress("DEPRECATION")
+
 package com.tapioca_v2.plg.tapioca_v2
 
-import androidx.annotation.NonNull
-
 import android.Manifest
-import android.app.Application
 import android.app.Activity
-import android.content.pm.PackageManager
-import android.os.Environment
-import android.util.EventLog
-import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import com.daasuu.mp4compose.composer.Mp4Composer
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import me.anharu.video_editor.VideoGeneratorService
-import java.io.File
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.*
+import androidx.annotation.NonNull as NonNull1
 
 
 /** TapiocaV2Plugin */
@@ -55,19 +48,19 @@ class TapiocaV2Plugin: FlutterPlugin, MethodCallHandler, PluginRegistry.RequestP
   companion object {
     @JvmStatic
     fun registerWith(registrar: Registrar) {
-      val instance = VideoEditorPlugin()
+      val instance = TapiocaV2Plugin()
       instance.onAttachedToEngine(registrar.messenger())
     }
   }
 
 
-  override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
+  override fun onMethodCall(call: MethodCall, result: Result) {
     if (call.method == "getPlatformVersion") {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     } else if (call.method == "writeVideofile") {
 
-      var getActivity = activity ?: return
-      var newEventSink = eventSink ?: return
+      val getActivity = activity ?: return
+      val newEventSink = eventSink ?: return
       checkPermission(getActivity)
 
       val srcFilePath: String = call.argument("srcFilePath") ?: run {
@@ -129,6 +122,6 @@ class TapiocaV2Plugin: FlutterPlugin, MethodCallHandler, PluginRegistry.RequestP
       arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE), myPermissionCode)
   }
 
-  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
   }
 }
