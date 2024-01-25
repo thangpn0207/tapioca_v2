@@ -6,7 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:tapioca_v2/tapioca.dart';
+import 'package:tapioca_v2/tapioca_v2.dart';
 import 'package:video_player/video_player.dart';
 
 void main() => runApp(MyApp());
@@ -96,10 +96,6 @@ class _MyAppState extends State<MyApp> {
                       final path =
                           '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}result.mp4';
                       print(tempDir);
-                      final imageBitmap =
-                          (await rootBundle.load("assets/tapioca_drink.png"))
-                              .buffer
-                              .asUint8List();
                       try {
                         final tapiocaBalls = [
                           TapiocaBall.filter(Filters.pink, 0.2),
