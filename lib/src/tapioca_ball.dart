@@ -9,8 +9,8 @@ abstract class TapiocaBall {
   }
 
   /// Creates a object to apply color filter from [Color].
-  static TapiocaBall filterFromColor(Color color, double degree) {
-    return _Filter.color(color, degree);
+  static TapiocaBall filterFromColor(Color color, double alpha) {
+    return _Filter.color(color, alpha);
   }
 
   /// Creates a object to overlay text.
@@ -37,8 +37,8 @@ enum Filters { pink, white, blue }
 
 class _Filter extends TapiocaBall {
   late String color;
-  late double degree;
-  _Filter(Filters type, double degree) {
+  late double alpha;
+  _Filter(Filters type, double alpha) {
     switch (type) {
       case Filters.pink:
         this.color = "#ffc0cb";
@@ -49,15 +49,15 @@ class _Filter extends TapiocaBall {
       case Filters.blue:
         this.color = "#1f8eed";
     }
-    this.degree = degree;
+    this.alpha = alpha;
   }
-  _Filter.color(Color colorInstance, double degree) {
+  _Filter.color(Color colorInstance, double alpha) {
     this.color = '#${colorInstance.value.toRadixString(16)}';
-    this.degree = degree;
+    this.alpha = alpha;
   }
 
   Map<String, dynamic> toMap() {
-    return {'type': color, 'degree': degree};
+    return {'type': color, 'alpha': alpha};
   }
 
   String toTypeName() {
