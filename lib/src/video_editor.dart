@@ -1,7 +1,26 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 
-class VideoEditor {
+abstract class IVideoEditor {}
+
+class _VideoEditorImpl extends IVideoEditor {
+  _VideoEditorImpl._();
+
+  static _VideoEditorImpl? _instance;
+
+  static _VideoEditorImpl get instance {
+    return _instance ??= _VideoEditorImpl._();
+  }
+
+  static void _dispose() {
+    _instance = null;
+  }
+}
+
+// ignore: non_constant_identifier_names
+IVideoEditor get VideoEditorV2 => _VideoEditorImpl.instance;
+
+extension VideoEditorTapioca on IVideoEditor {
   static const MethodChannel _channel = MethodChannel('video_editor');
 
   static Future<String> get platformVersion async {
