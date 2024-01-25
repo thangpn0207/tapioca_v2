@@ -1,6 +1,6 @@
 # Tapioca_V2 - a Flutter plugin for video editing
-[![Version](https://img.shields.io/pub/v/tapioca.svg)](https://pub.dev/packages/tapioca_v2)
-[![Generic badge](https://img.shields.io/badge/platform-android%20|%20ios%20|%20web%20-blue.svg)](https://pub.dev/packages/tapioca_v2)
+[![Version](https://img.shields.io/pub/v/tapioca_v2.svg)](https://pub.dev/packages/tapioca_v2)
+[![Generic badge](https://img.shields.io/badge/platform-android%20|%20ios%20|-blue.svg)](https://pub.dev/packages/tapioca_v2)
 
 "Tapioca_v2 is a Flutter plugin designed for video editing on both Android and iOS platforms.
 It has been updated and improved based on the source code of Tapioca."
