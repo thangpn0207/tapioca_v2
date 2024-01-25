@@ -11,10 +11,6 @@ class _VideoEditorImpl extends IVideoEditor {
   static _VideoEditorImpl get instance {
     return _instance ??= _VideoEditorImpl._();
   }
-
-  static void _dispose() {
-    _instance = null;
-  }
 }
 
 // ignore: non_constant_identifier_names
