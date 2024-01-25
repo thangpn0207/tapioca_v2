@@ -20,4 +20,8 @@ class Cup {
     };
     return VideoEditor.writeVideofile(content.name, destFilePath, processing);
   }
+
+  Future cancelExport() {
+    return VideoEditor.cancelExport();
+  }
 }

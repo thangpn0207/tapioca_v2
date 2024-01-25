@@ -17,4 +17,8 @@ class VideoEditor {
       'processing': processing
     });
   }
+
+  static Future cancelExport() async {
+    await _channel.invokeMethod('cancelExport', <String, dynamic>{});
+  }
 }

@@ -8,12 +8,11 @@ import androidx.core.app.ActivityCompat
 import com.daasuu.mp4compose.composer.Mp4Composer
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
+import io.flutter.plugin.common.*
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.*
-import androidx.annotation.NonNull as NonNull1
 
 
 /** TapiocaV2Plugin */
@@ -27,6 +26,7 @@ class TapiocaV2Plugin: FlutterPlugin, MethodCallHandler, PluginRegistry.RequestP
   private var eventChannel: EventChannel? = null
   private val myPermissionCode = 34264
   private var eventSink : EventChannel.EventSink? = null
+  private var composer: Mp4Composer? = null
 
   override fun onAttachedToEngine(flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     onAttachedToEngine(flutterPluginBinding.binaryMessenger)
@@ -58,7 +58,6 @@ class TapiocaV2Plugin: FlutterPlugin, MethodCallHandler, PluginRegistry.RequestP
     if (call.method == "getPlatformVersion") {
       result.success("Android ${android.os.Build.VERSION.RELEASE}")
     } else if (call.method == "writeVideofile") {
-
       val getActivity = activity ?: return
       val newEventSink = eventSink ?: return
       checkPermission(getActivity)
@@ -76,9 +75,13 @@ class TapiocaV2Plugin: FlutterPlugin, MethodCallHandler, PluginRegistry.RequestP
           result.error("processing_data_not_found", "the processing is not found.", null)
           return
         }
-      val generator = VideoGeneratorService(Mp4Composer(srcFilePath, destFilePath))
+      composer = Mp4Composer(srcFilePath, destFilePath)
+      val generator = VideoGeneratorService(composer!!)
       generator.writeVideofile(processing, result, getActivity,newEventSink)
-    } else {
+    } else if (call.method == "cancelExport") {
+      val generator = composer?.let { VideoGeneratorService(it) }
+      generator?.cancelExport( result)
+    }else {
       result.notImplemented()
     }
   }

@@ -3,7 +3,8 @@ import UIKit
 
 public class TapiocaV2Plugin: NSObject, FlutterPlugin {
     private var events: FlutterEventSink?
-    
+    let video = VideoGeneratorService()
+
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "video_editor", binaryMessenger: registrar.messenger())
         let eventChannel = FlutterEventChannel(name: "video_editor_progress", binaryMessenger: registrar.messenger())
@@ -17,7 +18,6 @@ public class TapiocaV2Plugin: NSObject, FlutterPlugin {
 public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
     case "writeVideofile":
-        let video = VideoGeneratorService()
         guard let args = call.arguments as? [String: Any] else {
           result(FlutterError(code: "arguments_not_found",
                             message: "the arguments is not found.",
@@ -44,7 +44,10 @@ public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
             }
             video.writeVideofile(srcPath: srcName, destPath: destName,
                                  processing: processing,result: result, eventSink : self.events)
-        default:
+
+    case "cancelExport":
+        video.cancelCompression(result: result)
+    default:
             result("iOS d" + UIDevice.current.systemVersion)
         }
     }

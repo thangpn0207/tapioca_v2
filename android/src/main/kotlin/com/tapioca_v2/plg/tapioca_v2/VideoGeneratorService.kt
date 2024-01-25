@@ -12,6 +12,8 @@ import com.tapioca_v2.plg.tapioca_v2.filter.GlTextOverlayFilter
 
 interface VideoGeneratorServiceInterface {
     fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink);
+    fun cancelExport(result: Result);
+
 }
 
 class VideoGeneratorService(
@@ -79,6 +81,9 @@ class VideoGeneratorService(
                     })
                 }
             }).start()
+    }
+    override fun cancelExport(result: Result) {
+        composer.cancel()
     }
 }
 

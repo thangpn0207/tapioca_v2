@@ -38,28 +38,28 @@ enum Filters { pink, white, blue }
 class _Filter extends TapiocaBall {
   late String color;
   late double alpha;
-  _Filter(Filters type, double alpha) {
+  _Filter(Filters type, this.alpha) {
     switch (type) {
       case Filters.pink:
-        this.color = "#ffc0cb";
+        color = "#ffc0cb";
         break;
       case Filters.white:
-        this.color = "#ffffff";
+        color = "#ffffff";
         break;
       case Filters.blue:
-        this.color = "#1f8eed";
+        color = "#1f8eed";
     }
-    this.alpha = alpha;
   }
-  _Filter.color(Color colorInstance, double alpha) {
-    this.color = '#${colorInstance.value.toRadixString(16)}';
-    this.alpha = alpha;
+  _Filter.color(Color colorInstance, this.alpha) {
+    color = '#${colorInstance.value.toRadixString(16)}';
   }
 
+  @override
   Map<String, dynamic> toMap() {
     return {'type': color, 'alpha': alpha};
   }
 
+  @override
   String toTypeName() {
     return 'Filter';
   }
@@ -81,6 +81,7 @@ class _TextOverlay extends TapiocaBall {
     required this.alpha,
   });
 
+  @override
   Map<String, dynamic> toMap() {
     return {
       'text': text,
@@ -92,6 +93,7 @@ class _TextOverlay extends TapiocaBall {
     };
   }
 
+  @override
   String toTypeName() {
     return 'TextOverlay';
   }
@@ -103,10 +105,12 @@ class _ImageOverlay extends TapiocaBall {
   final int y;
   _ImageOverlay(this.bitmap, this.x, this.y);
 
+  @override
   Map<String, dynamic> toMap() {
     return {'bitmap': bitmap, 'x': x, 'y': y};
   }
 
+  @override
   String toTypeName() {
     return 'ImageOverlay';
   }

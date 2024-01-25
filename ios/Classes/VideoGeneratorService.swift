@@ -5,9 +5,11 @@ import Flutter
 
 public protocol VideoGeneratorServiceInterface {
     func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult, eventSink : FlutterEventSink?)
+    func cancelCompression( result: @escaping FlutterResult)
 }
 
 public class VideoGeneratorService: VideoGeneratorServiceInterface {
+      private var exporter: AVAssetExportSession? = nil
     public func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult, eventSink : FlutterEventSink?) {
         let fileURL = URL(fileURLWithPath: srcPath)
 
@@ -174,17 +176,26 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
             switch assetExport.status{
             case .completed:
                 print("Movie complete")
+                self.exporter = nil
                 result(nil)
             case  .failed:
+                self.exporter = nil
                 print("failed \(String(describing: assetExport.error))")
             case .cancelled:
+                self.exporter = nil
+
                 print("cancelled \(String(describing: assetExport.error))")
             default:
                 print("cancelled \(String(describing: assetExport.error))")
                 break
             }
         }
+        exporter = assetExport
     }
+     public func cancelCompression(result: FlutterResult) {
+            exporter?.cancelExport()
+            result(nil)
+        }
 }
 
 extension UIColor {
