@@ -60,7 +60,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                                             details: nil))
                         return
                     }
-                    let overlayColor = UIColor(hex: type.replacingOccurrences(of: "#", with: "")).withAlphaComponent(0.5)
+                    let overlayColor = UIColor(hex: type.replacingOccurrences
+                    (of: "#", with: "")).withAlphaComponent(0.32)
                     let c = CIColor(color: overlayColor)
                     guard let colorFilter = CIFilter(name: "CIConstantColorGenerator", parameters: [kCIInputColorKey: c]) else {
                         fatalError()
