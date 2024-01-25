@@ -1,6 +1,7 @@
+import 'package:tapioca_v2/src/video_editor.dart';
+
 import 'tapioca_ball.dart';
 import 'content.dart';
-import 'video_editor.dart';
 
 /// Cup is a class to wrap a Content object and List object.
 class Cup {
@@ -18,10 +19,11 @@ class Cup {
     final Map<String, Map<String, dynamic>> processing = {
       for (var v in tapiocaBalls) v.toTypeName(): v.toMap()
     };
-    return VideoEditor.writeVideofile(content.name, destFilePath, processing);
+    return VideoEditorTapioca.writeVideofile(
+        content.name, destFilePath, processing);
   }
 
   Future cancelExport() {
-    return VideoEditor.cancelExport();
+    return VideoEditorTapioca.cancelExport();
   }
 }
