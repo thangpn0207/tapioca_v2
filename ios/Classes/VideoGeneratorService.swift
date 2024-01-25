@@ -53,15 +53,16 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
             for (key, value) in processing  {
                 switch key {
                 case "Filter":
-                    guard let type = value["type"] as? String else {
+                    guard let type = value["type"] as? String,
+                       let alpha = value["alpha"] as? Double else {
                         print("not found value")
                         result(FlutterError(code: "processing_data_invalid",
                                             message: "one Filter member is not found.",
                                             details: nil))
                         return
                     }
-                    let overlayColor = UIColor(hex: type.replacingOccurrences
-                    (of: "#", with: "")).withAlphaComponent(0.32)
+
+                    let overlayColor = UIColor(hex: type.replacingOccurrences(of: "#", with: ""), alpha: alpha)
                     let c = CIColor(color: overlayColor)
                     guard let colorFilter = CIFilter(name: "CIConstantColorGenerator", parameters: [kCIInputColorKey: c]) else {
                         fatalError()
@@ -93,7 +94,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
 
                     let attributes: [NSAttributedString.Key: Any] = [
                         .font: font,
-                        .foregroundColor: UIColor(hex:color.replacingOccurrences(of: "#", with: "")),
+                        .foregroundColor: UIColor(hex:color.replacingOccurrences(of: "#", with: ""),alpha: 1),
                     ]
 
                     let attributedQuote = NSAttributedString(string: text, attributes: attributes)
@@ -187,7 +188,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
 }
 
 extension UIColor {
-    convenience init(hex: String, alpha: CGFloat = 1.0) {
+    convenience init(hex: String, alpha: Double) {
         let v = Int("000000" + hex, radix: 16) ?? 0
         let r = CGFloat(v / Int(powf(256, 2)) % 256) / 255
         let g = CGFloat(v / Int(powf(256, 1)) % 256) / 255
@@ -198,7 +199,7 @@ extension UIColor {
 
 struct Filter {
     let type: String
-
+    let alpha: Double
 }
 
 struct ImageOverlay {

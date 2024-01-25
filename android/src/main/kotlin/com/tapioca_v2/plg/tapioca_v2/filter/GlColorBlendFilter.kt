@@ -29,6 +29,6 @@ class GlColorBlendFilter(filter: Filter) : GlFilter(GlFilter.DEFAULT_VERTEX_SHAD
         GLES20.glUniform1f(getHandle("red"), Color.red(color) / 255f)
         GLES20.glUniform1f(getHandle("green"), Color.green(color)/ 255f)
         GLES20.glUniform1f(getHandle("blue"), Color.blue(color)/ 255f)
-        GLES20.glUniform1f(getHandle("alpha"), filter.degree.toFloat())
+        GLES20.glUniform1f(getHandle("alpha"), filter.alpha.toFloat())
     }
 }
