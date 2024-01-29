@@ -19,7 +19,5 @@ data class TextOverlay(val map: Map<String, Any>) {
     val y: Int by map
     val size: Int by map
     val color: String by map
-    val start: Int? by map
-    val duration: Int? by map
-
+    val alpha: Double by map
 }
