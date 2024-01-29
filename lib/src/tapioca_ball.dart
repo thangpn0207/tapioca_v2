@@ -15,9 +15,8 @@ abstract class TapiocaBall {
 
   /// Creates a object to overlay text.
   static TapiocaBall textOverlay(
-      String text, int x, int y, int size, Color color, double alpha) {
-    return _TextOverlay(
-        text: text, x: x, y: y, size: size, color: color, alpha: alpha);
+      String text, int x, int y, int size, Color color) {
+    return _TextOverlay(text: text, x: x, y: y, size: size, color: color);
   }
 
   /// Creates a object to overlay a image.
