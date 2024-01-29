@@ -8,18 +8,17 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import com.daasuu.mp4compose.filter.GlOverlayFilter
 import com.tapioca_v2.plg.tapioca_v2.TextOverlay
+import androidx.core.graphics.ColorUtils;
 
 
 class GlTextOverlayFilter(textOverlay: TextOverlay) : GlOverlayFilter() {
     private val textOverlay: TextOverlay = textOverlay;
 
-    @RequiresApi(Build.VERSION_CODES.O)
     protected override fun drawCanvas(canvas: Canvas) {
         val bitmap: Bitmap = textAsBitmap(textOverlay.text,textOverlay.size
             .toFloat(),textOverlay.color,textOverlay)
         canvas.drawBitmap(bitmap,textOverlay.x.toFloat(),textOverlay.y.toFloat(),null);
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun textAsBitmap(text: String, textSize: Float, color: String, textOverlay: TextOverlay):
             Bitmap {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
@@ -39,14 +38,8 @@ class GlTextOverlayFilter(textOverlay: TextOverlay) : GlOverlayFilter() {
         canvas.drawText(text, 0f, baseline, paint)
         return image
     }
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun convertColor(textOverlay: TextOverlay): Int {
         val color = Color.parseColor(textOverlay.color)
-        return Color.argb(
-            textOverlay.alpha.toFloat(),
-            Color.red(color).toFloat(),
-            Color.green(color).toFloat(),
-            Color.blue(color).toFloat()
-        )
+        return  ColorUtils.setAlphaComponent(color, (textOverlay.alpha*255).toInt())
     }
 }
