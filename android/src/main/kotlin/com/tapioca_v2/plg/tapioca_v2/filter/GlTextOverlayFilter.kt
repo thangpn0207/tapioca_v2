@@ -15,17 +15,15 @@ class GlTextOverlayFilter(textOverlay: TextOverlay) : GlOverlayFilter() {
     private val textOverlay: TextOverlay = textOverlay;
 
     protected override fun drawCanvas(canvas: Canvas) {
-        val bitmap: Bitmap = textAsBitmap(textOverlay.text,textOverlay.size
-            .toFloat(),textOverlay.color,textOverlay)
+        val bitmap: Bitmap = textAsBitmap(textOverlay.text,textOverlay.size.toFloat(),textOverlay.color)
         canvas.drawBitmap(bitmap,textOverlay.x.toFloat(),textOverlay.y.toFloat(),null);
     }
-    private fun textAsBitmap(text: String, textSize: Float, color: String, textOverlay: TextOverlay):
-            Bitmap {
+    private fun textAsBitmap(text: String, textSize: Float, color: String): Bitmap {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         //TODO : Use specified font - via. Typeface
         //TODO : Support Text Bold, Italic & Bold Italic - via. Typeface
         paint.textSize = textSize
-        paint.color = convertColor(textOverlay)
+        paint.color = Color.parseColor(color)
         //TODO : Support Center & Right Aligns
         //TODO : Support text will be out of video boundaries check
         //TODO : Support fallback align if text will be out of video boundaries
@@ -37,9 +35,5 @@ class GlTextOverlayFilter(textOverlay: TextOverlay) : GlOverlayFilter() {
         val canvas = Canvas(image)
         canvas.drawText(text, 0f, baseline, paint)
         return image
-    }
-    private fun convertColor(textOverlay: TextOverlay): Int {
-        val color = Color.parseColor(textOverlay.color)
-        return  ColorUtils.setAlphaComponent(color, (textOverlay.alpha*255).toInt())
     }
 }

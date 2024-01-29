@@ -71,14 +71,12 @@ class _TextOverlay extends TapiocaBall {
   final int y;
   final int size;
   final Color color;
-  final double? alpha;
   _TextOverlay({
     required this.text,
     required this.x,
     required this.y,
     required this.size,
     required this.color,
-    required this.alpha,
   });
 
   @override
@@ -88,8 +86,7 @@ class _TextOverlay extends TapiocaBall {
       'x': x,
       'y': y,
       'size': size,
-      'alpha': alpha,
-      'color': '#${color.value.toRadixString(16)}'
+      'color': '#${color.value.toRadixString(16).substring(2)}'
     };
   }
 
