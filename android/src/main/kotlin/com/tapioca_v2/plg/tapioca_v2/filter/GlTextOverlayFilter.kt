@@ -1,9 +1,6 @@
 package com.tapioca_v2.plg.tapioca_v2.filter
 
-import android.graphics.Bitmap
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
+import android.graphics.*
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.daasuu.mp4compose.filter.GlOverlayFilter
@@ -22,6 +19,8 @@ class GlTextOverlayFilter(textOverlay: TextOverlay) : GlOverlayFilter() {
         val paint = Paint(Paint.ANTI_ALIAS_FLAG)
         //TODO : Use specified font - via. Typeface
         //TODO : Support Text Bold, Italic & Bold Italic - via. Typeface
+        val typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
+        paint.typeface= typeface
         paint.textSize = textSize
         paint.color = Color.parseColor(color)
         //TODO : Support Center & Right Aligns

@@ -92,8 +92,8 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                                             details: nil))
                         return
                     }
-                    let font = UIFont.systemFont(ofSize: CGFloat(truncating: textSize))
-
+                    let font = UIFont.boldSystemFont(ofSize: CGFloat(truncating: textSize))
+                    
                     let attributes: [NSAttributedString.Key: Any] = [
                         .font: font,
                         .foregroundColor: UIColor(hex:color.replacingOccurrences(of: "#", with: ""),alpha: 1),
@@ -103,7 +103,7 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                     let textGenerationFilter = CIFilter(name: "CIAttributedTextImageGenerator")!
                     textGenerationFilter.setValue(attributedQuote, forKey: "inputText")
                     let textImage = textGenerationFilter.outputImage!
-                    let transform = CGAffineTransform(translationX: CGFloat(truncating: x), y: filteringRequest.sourceImage.extent.height - CGFloat(textSize) - CGFloat(truncating: y))
+                    let transform = CGAffineTransform(translationX: CGFloat(truncating: x), y: filteringRequest.sourceImage.extent.height - CGFloat(truncating: textSize) - CGFloat(truncating: y))
 
                      // Calculate the time-based display range
 //                     let currentTimeInSeconds = CMTimeGetSeconds(filteringRequest.compositionTime)
