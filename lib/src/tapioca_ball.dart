@@ -1,6 +1,8 @@
 import "dart:typed_data";
 import "dart:ui";
 
+import "package:tapioca_v2/src/util.dart";
+
 /// TapiocaBall is a effect to apply to the video.
 abstract class TapiocaBall {
   /// Creates a object to apply color filter from [Filters].
@@ -50,7 +52,7 @@ class _Filter extends TapiocaBall {
     }
   }
   _Filter.color(Color colorInstance, this.alpha) {
-    color = '#${colorInstance.value.toRadixString(16)}';
+    color = colorInstance.toHex(leadingHashSign: true);
   }
 
   @override
@@ -85,7 +87,7 @@ class _TextOverlay extends TapiocaBall {
       'x': x,
       'y': y,
       'size': size,
-      'color': '#${color.value.toRadixString(16).substring(2)}'
+      'color': color.toHex(leadingHashSign: true)
     };
   }
 
