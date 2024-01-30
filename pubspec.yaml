@@ -1,6 +1,6 @@
 name: tapioca_v2
 description: "Tapioca V2 is a Flutter plugin for video editing on Android and iOS."
-version: 1.0.0+1
+version: 1.0.0+2
 homepage: https://github.com/thangpn0207/tapioca_v2
 
 environment:
