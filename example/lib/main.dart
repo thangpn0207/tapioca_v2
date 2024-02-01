@@ -8,8 +8,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:tapioca_v2/tapioca_v2.dart';
 import 'package:video_player/video_player.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
-void main() => runApp(MyApp());
+void main() => runApp(const MyApp());
 
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
@@ -22,32 +23,18 @@ class _MyAppState extends State<MyApp> {
   final navigatorKey = GlobalKey<NavigatorState>();
   late XFile _video;
   bool isLoading = false;
-  static const EventChannel _channel =
-      const EventChannel('video_editor_progress');
   late StreamSubscription _streamSubscription;
   int processPercentage = 0;
 
   @override
   void initState() {
     super.initState();
-    _enableEventReceiver();
   }
 
   @override
   void dispose() {
     super.dispose();
     _disableEventReceiver();
-  }
-
-  void _enableEventReceiver() {
-    _streamSubscription =
-        _channel.receiveBroadcastStream().listen((dynamic event) {
-      setState(() {
-        processPercentage = (event.toDouble() * 100).round();
-      });
-    }, onError: (dynamic error) {
-      print('Received error: ${error.message}');
-    }, cancelOnError: true);
   }
 
   void _disableEventReceiver() {
@@ -96,11 +83,22 @@ class _MyAppState extends State<MyApp> {
                       final path =
                           '${tempDir.path}/${DateTime.now().millisecondsSinceEpoch}result.mp4';
                       print(tempDir);
+                      final ByteData bmp = await rootBundle.load('assets/cool'
+                          '.png');
+                      final currentState = navigatorKey.currentState;
+                      // if (currentState != null) {
+                      //   currentState.push(
+                      //     MaterialPageRoute(
+                      //         builder: (context) => VideoScreen(_video.path)),
+                      //   );
+                      // }
                       try {
                         final tapiocaBalls = [
-                          TapiocaBall.filter(Filters.pink, 0.2),
-                          TapiocaBall.textOverlay(
-                              "text", 100, 10, 100, const Color(0xffffc0cb), 1),
+                          //TapiocaBall.filter(Filters.pink, 0.2),
+                          // TapiocaBall.textOverlay(
+                          //     "text", 100, 10, 100, const Color(0xffffc0cb)),
+                          TapiocaBall.watermark(
+                              bmp.buffer.asUint8List(), Position.rightTop),
                         ];
                         print("will start");
                         final cup = Cup(Content(_video.path), tapiocaBalls);
@@ -117,7 +115,8 @@ class _MyAppState extends State<MyApp> {
                           if (currentState != null) {
                             currentState.push(
                               MaterialPageRoute(
-                                  builder: (context) => VideoScreen(path)),
+                                  builder: (context) =>
+                                      VideoScreen(_video.path)),
                             );
                           }
 
@@ -171,7 +170,9 @@ class _VideoAppState extends State<VideoScreen> {
         child: _controller.value.isInitialized
             ? AspectRatio(
                 aspectRatio: _controller.value.aspectRatio,
-                child: VideoPlayer(_controller),
+                child: Stack(children: [
+                  VideoPlayer(_controller),
+                ]),
               )
             : Container(),
       ),

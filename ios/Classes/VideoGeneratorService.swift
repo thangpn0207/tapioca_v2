@@ -2,6 +2,8 @@ import Foundation
 import AVFoundation
 import Photos
 import Flutter
+import CoreImage
+
 
 public protocol VideoGeneratorServiceInterface {
     func writeVideofile(srcPath:String, destPath:String, processing: [String: [String:Any]], result: @escaping FlutterResult, eventSink : FlutterEventSink?)
@@ -143,6 +145,55 @@ public class VideoGeneratorService: VideoGeneratorServiceInterface {
                     let transform = CGAffineTransform(translationX: filteringRequest.sourceImage.extent.width - watermarkImage.extent.width - CGFloat(truncating: x), y:  CGFloat(truncating: y) - filteringRequest.sourceImage.extent.height)
                     imageFilter.setValue(watermarkImage.transformed(by: transform), forKey: "inputImage")
                     source = imageFilter.outputImage!
+
+                  case "Watermark":
+                                            guard let bitmap = value["bitmap"] as? FlutterStandardTypedData,
+                                            let position = value["position"] as? NSNumber
+                                                else {
+                                          print("not found image overlay")
+                                          result(FlutterError(code: "processing_data_invalid",
+                                                              message: "one ImageOverlay member is not found.",
+                                                              details: nil))
+                                          return
+                                      }
+                let watermarkFilter = CIFilter(name:
+                                      "CISourceOverCompositing")!
+                    guard let sourceImage = CIImage(data: bitmap.data) else {
+                                          result(FlutterError(code: "video_processing_failed",
+                                                              message: "creating watermarkImage is failed.",
+                                                              details: nil))
+                                          return
+                                      }
+                    let resizeFilter = CIFilter(name:"CILanczosScaleTransform")!
+                    // Desired output size
+                    let targetSize = CGSize(width:200, height:200)
+                    // Compute scale and corrective aspect ratio
+                    let scale = targetSize.height / (sourceImage.extent.height)
+                    let aspectRatio = targetSize.width/((sourceImage.extent.width) * scale)
+
+                    // Apply resizing
+                    resizeFilter.setValue(sourceImage, forKey: kCIInputImageKey)
+                    resizeFilter.setValue(scale, forKey: kCIInputScaleKey)
+                    resizeFilter.setValue(aspectRatio, forKey: kCIInputAspectRatioKey)
+                    let watermarkImage = resizeFilter.outputImage
+                    watermarkFilter.setValue(source, forKey: "inputBackgroundImage")
+                    let transform:CGAffineTransform ;
+                    switch position{
+                    case 0:
+                        transform = CGAffineTransform(translationX:  50 , y: filteringRequest.sourceImage.extent.height - (watermarkImage?.extent.height ?? 200) )
+                    case  1:
+                        transform = CGAffineTransform(translationX: 50 , y: 0)
+                    case 2:
+                        transform = CGAffineTransform(translationX: filteringRequest.sourceImage.extent.width - (watermarkImage?.extent.width ?? 200) , y: filteringRequest.sourceImage.extent.height - (watermarkImage?.extent.height ?? 200))
+                    case 3:
+                        transform = CGAffineTransform(translationX: filteringRequest.sourceImage.extent.width - (watermarkImage?.extent.width ?? 200) , y: 0)
+                    default:
+                        transform = CGAffineTransform(translationX: filteringRequest.sourceImage.extent.width - (watermarkImage?.extent.width ?? 200) , y: 0)
+                    }
+//                    let transform = CGAffineTransform(translationX: filteringRequest.sourceImage.extent.width - (watermarkImage?.extent.width ?? 200) - 2, y: 0)
+
+                    watermarkFilter.setValue(watermarkImage!.transformed(by: transform), forKey: "inputImage")
+                            source = watermarkFilter.outputImage!
                 default:
                     print("Not implement filter name")
                 }
@@ -227,4 +278,8 @@ struct TextOverlay {
     let color: String
     let start: NSNumber
     let duration: NSNumber
+}
+struct WatermarkOverlay {
+    let bitmap: Data
+    let position: NSNumber
 }

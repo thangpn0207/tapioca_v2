@@ -9,6 +9,7 @@ import com.daasuu.mp4compose.VideoFormatMimeType
 import io.flutter.plugin.common.EventChannel
 import com.tapioca_v2.plg.tapioca_v2.filter.GlColorBlendFilter
 import com.tapioca_v2.plg.tapioca_v2.filter.GlTextOverlayFilter
+import com.tapioca_v2.plg.tapioca_v2.filter.GlWatermarkFilter
 
 interface VideoGeneratorServiceInterface {
     fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink);
@@ -21,7 +22,6 @@ class VideoGeneratorService(
 ) : VideoGeneratorServiceInterface {
     override fun writeVideofile(processing: HashMap<String,HashMap<String,Any>>, result: Result, activity: Activity, eventSink: EventChannel.EventSink ) {
         val filters: MutableList<GlFilter> = mutableListOf()
-        val filtersWait: MutableList<TextOverlay> = mutableListOf()
 
         try {
             processing.forEach { (k, v) ->
@@ -35,9 +35,9 @@ class VideoGeneratorService(
                         val textOverlay = TextOverlay(v)
                         filters.add(GlTextOverlayFilter(textOverlay))
                     }
-                    "ImageOverlay" -> {
-                        val imageOverlay = ImageOverlay(v)
-                        filters.add(GlImageOverlayFilter(imageOverlay))
+                    "Watermark" -> {
+                        val watermarkOverlay = WatermarkOverlay(v)
+                        filters.add(GlWatermarkFilter(watermarkOverlay))
                     }
                 }
             }

@@ -26,6 +26,11 @@ abstract class TapiocaBall {
     return _ImageOverlay(bitmap, x, y);
   }
 
+  /// Creates a object to overlay a watermark.
+  static TapiocaBall watermark(Uint8List bitmap, Position position) {
+    return _WatermarkOverlay(bitmap, position);
+  }
+
   /// Returns a [Map<String, dynamic>] representation of this object.
   Map<String, dynamic> toMap();
 
@@ -112,4 +117,33 @@ class _ImageOverlay extends TapiocaBall {
   String toTypeName() {
     return 'ImageOverlay';
   }
+}
+
+class _WatermarkOverlay extends TapiocaBall {
+  final Uint8List bitmap;
+  final Position position;
+  _WatermarkOverlay(this.bitmap, this.position);
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'bitmap': bitmap,
+      'position': position.value,
+    };
+  }
+
+  @override
+  String toTypeName() {
+    return 'Watermark';
+  }
+}
+
+enum Position {
+  leftTop(0),
+  leftBottom(1),
+  rightTop(2),
+  rightBottom(3);
+
+  const Position(this.value);
+  final int value;
 }
